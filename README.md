@@ -1,3 +1,30 @@
+<!-- README -->
+1. Home Page:
+    i. Show Recently Listed NFTs
+        .If you own the NFTs, you can update the listing
+        . If not, you can buy the listing
+
+2. Sell Page:
+    i. You can list your NFT on the marketplace
+
+Use Moralis: How do we tell it to listen to our events?
+
+1. Connect it to our BlockChain
+2. Which Contract, which events, and what to do when it hears those events
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
