@@ -82,3 +82,17 @@
 // https://v1docs.moralis.io/moralis-dapp/tools/moralis-admin-cli
 // THe ".env" file method is given in the above website
 //  also we created a script in the "package.json" for "moralis:sync" which is not working at the moment
+;/How do we tell our Moralis Server to listen for Events/
+// We do it by using two ways:      1. UI       2. Using scripts to auto listen for the events
+;/We choose to do this programmatically/
+//creating file: "addEvent.js"
+;/using SDKs to connect with NodeJS/ //https://v1docs.moralis.io/moralis-dapp/connect-the-sdk
+// Connecting with NodeJSl since we are gonna run a little Moralis script,
+;/Listening for the events/ // following the docs section of Moralis located at https://v1docs.moralis.io/moralis-dapp/connect-the-sdk/connect-using-node#add-new-event-sync-from-code
+;/Reset Local Chain/ // this option is located in the network tab of the Moralis UI for situation like you have killed your hardhat node and then restarted it, the server will stop
+// listening for the events now, as it is assuming the last chain is still running; in that case you have to press "reset local chain" to get back to listening events
+//if in the mean time that you had killed the node and then there were some events then chances are the Moralis server wont listen for those events and you might lose those events
+;/What if someone Buys an NFT, the event itemListed will still be in our server/ //we can get around this problem by choosing one of the two ways:
+// introducing
+;/Moralis Cloud Functions/ //https://v1docs.moralis.io/moralis-dapp/cloud-code/cloud-functions
+// allow us to add anything we want to do from our MOralis server; These are function/scripts run on the server, whenever we want them to
