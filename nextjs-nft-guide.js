@@ -66,7 +66,7 @@
 ;/Downloading FRP/ //https://v1docs.moralis.io/moralis-dapp/web3/setting-up-ganache
 ;/Guide to run the commands correctly/
 //Step 1: Download the windows frp version titled "[frp_0.44.0_windows_amd64.zip]"
-// Step 2: Replace the frpc.ini contents with the ones provided by your moralis server
+// Step 2: Replace the frpc.ini contents with the ones provided by your moralis server; see the server details in the new server you created
 // Step 3: Now, cd into the frp directory
 // cd frp
 // before executing the actual file we have to provide it permissions to since you might be seeing
@@ -75,13 +75,13 @@
 // chmod +x frpc.exe
 // Finally, once the execution permission is provided, we can run the file by typing
 // ./frpc.exe -c frpc.ini
-;/MOralis CLI/
+;/MOralis CLI/ // moralis comes with a CLI- command line Interface which handles all the manual button that you have to press and does this in with commands
 // RUN COMM:yarn global add moralis-admin-cli
 //  RUN COMM: moralis-admin-cli
 // we are gonna run this moralis admin cli version of this FRC -c command:
 // https://v1docs.moralis.io/moralis-dapp/tools/moralis-admin-cli
 // THe ".env" file method is given in the above website
-//  also we created a script in the "package.json" for "moralis:sync" which is not working at the moment
+//  also we created a script in the "package.json" for "moralis:sync";  when you write the command for a new server make sure to replace the subdomain with your new server subdomain
 ;/How do we tell our Moralis Server to listen for Events/
 // We do it by using two ways:      1. UI       2. Using scripts to auto listen for the events
 ;/We choose to do this programmatically/
@@ -96,3 +96,42 @@
 // introducing
 ;/Moralis Cloud Functions/ //https://v1docs.moralis.io/moralis-dapp/cloud-code/cloud-functions
 // allow us to add anything we want to do from our MOralis server; These are function/scripts run on the server, whenever we want them to
+// created a new folder " cloudFunctions" a new files in there to write a code that gets synced to the MORALIS Server;
+// we copy the command of admin cli to add as a new script to "package.json" once we run this command it will sync the code to the "cloudFunctions" tab of the Moralis server
+;/we can create a cloud function that only runs whenever these events are synced  /
+;/we are going to create a new table "active Item" which is going to say okay anytime its listed it will be active but once its bought or cancelled we will remove it from the "active item" list/
+;/==============Mine and Move blocks/
+// //this will be a utility that we use to move the blocks; so that we run our Hardhat node then we have complete control over our node what we want our node to do
+// we can manually mine nodes and move blocks ahead
+;/Moralis Server troubleshoot/ //This is what worked for me
+
+// Delete current server
+// Wait some time , and make a new server
+// (test with your recent region but also try to select a new region )
+// make necessary changes to your ".env "file, update "scripts" with the new subdomain, update "frpc.exe" file with the new server details
+// Good luck !
+;/created a new script in the Scripts folder of NftMarketplace backend repo/
+//name of the script "canel-item.js" and same as this "buy-item.js" will be created
+;/Writing to index.js/ // this took a long time as we had to write scripts to add Event listening for the moralis server and then add Active Item table
+//for fetching the currently active items that we will be querrying to in order to show them on the Marketplace
+;/useMoralisQuery/ // a moralis hook that allows to fetch and make queries to our database in a raect context
+//if you look at the docs, useMoralisQuery returns data, error, isLoading; and automatically run this query the instant our index pops up
+;/==============Rendering Image/
+//created files in the "component" folder
+
+////in our index.js we have componenets like price, nftaddress, tokenId, etc so we are gonna have to pass them all to NFTBox componenet
+//tokens have their tokenURI which points the image URL of what the actual token looks like
+// 1. we want to call that token URI    2. call the image URI to show the image
+//so we will wait those two API requests to get the actual image, and we are gonna save that image as a state variable on this component here
+// we are gonna work with useState to keep track of that imageURI
+// we are going to work with useWeb3Contract because we want to call tokenURI
+// useWeb3Contract needs some params; first we need to grab the abi of the nFT, coz we need to call tokenURI, for that abi we need to update our front-end
+;/IPFS Gateway/
+//the tokenURI is in IPFS, so for the users, its not suitable as not everybody havw IPFS installed and all browser support IPFS
+//to get around this issue we need to convert the tokenURI to its https version by cheating a little bit:
+//using IPFS Gateway: a server that will return IPFS file from a normal URL
+;/================image componenet on NextJS/
+// image component lets us render images just by using imageURI, but as this has some optimization in the backend and alot is going in; hence we cant use static website;
+//we cant use static website because we are using Moralis server anyways but now we definitely need a server and cant be done on a static IPFS
+;/=========MODAL=/
+// modal is something that pops up like a metamask when a tx is initiated it pops up

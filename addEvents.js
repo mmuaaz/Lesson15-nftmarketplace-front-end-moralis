@@ -1,22 +1,22 @@
 const Moralis = require("moralis-v1/node") // importing the node extension of the moralis package
 require("dotenv").config()
 const contractAddresses = require("./constants/networkMapping.json")
-const chainId = process.env.chainId || 31337 // add "chainId" in the ".env"file
+let chainId = process.env.chainId || 31337
 let moralisChainId = chainId == "31337" ? "1337" : chainId // Moralis understands a local chain is 1337
-
 const contractAddress = contractAddresses[chainId]["NftMarketplace"][0]
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL
 const appId = process.env.NEXT_PUBLIC_APP_ID
 const masterKey = process.env.masterKey
 
-//Sync historical allows the node to go back throughout the BC grab all the events ever emmitted by that SC
-
 async function main() {
     await Moralis.start({ serverUrl, appId, masterKey })
-    console.log(`Working with contract address ${contractAddress}`)
+    console.log(`Working with contrat address ${contractAddress}`)
+
     let itemListedOptions = {
+        // Moralis understands a local chain is 1337
         chainId: moralisChainId,
+        //Sync historical allows the node to go back throughout the BC grab all the events ever emmitted by that SC
         sync_historical: true,
         topic: "ItemListed(address,address,uint256,uint256)",
         address: contractAddress,
@@ -55,6 +55,7 @@ async function main() {
         },
         tableName: "ItemListed", // THis is gonna be the name of the table that we gonna update on the UI database
     }
+
     let itemBoughtOptions = {
         chainId: moralisChainId,
         address: contractAddress,
@@ -93,6 +94,7 @@ async function main() {
         },
         tableName: "ItemBought",
     }
+
     let itemCanceledOptions = {
         chainId: moralisChainId,
         address: contractAddress,
@@ -128,8 +130,7 @@ async function main() {
     //To Send these events up to our server, we are going to write some script:
     const listedResponse = await Moralis.Cloud.run("watchContractEvent", itemListedOptions, {
         useMasterKey: true,
-    })
-    //"Moralis.Cloud.run" run API calls to our server that we are making is going to return a response "success : true"
+    }) //"Moralis.Cloud.run" run API calls to our server that we are making is going to return a response "success : true"
     const boughtResponse = await Moralis.Cloud.run("watchContractEvent", itemBoughtOptions, {
         useMasterKey: true,
     })
@@ -138,9 +139,9 @@ async function main() {
     })
     // so we are going to check if the "Moralis.Cloud.run" returns success:
     if (listedResponse.success && canceledResponse.success && boughtResponse.success) {
-        console.log("Yeah!!! You did this right")
+        console.log("Success! Database Updated with watching events")
     } else {
-        console.log("Recheck something is not right")
+        console.log("Recheck things didnt go as thought out...")
     }
 }
 

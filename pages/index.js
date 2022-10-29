@@ -1,5 +1,7 @@
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
+import { useMoralisQuery, useMoralis } from "react-moralis"
+import NFTBox from "../components/NFTBox"
 
 export default function Home() {
     ;/ ============OBJECTIVES/
@@ -14,6 +16,50 @@ export default function Home() {
     // every single time an item is listed we are going to index it in a database for ourself, and then we are going to call
     // our centalized database to start and we're gonna call database to do that, is it not centralized????
     // Refer to notes for indexing to a server
-    ;/ we will read from a database that has all the mapping in an easier to read data structure/
-    return <div className={styles.container}>WHATTTT</div>
+
+    // we will read from a database that has all the mapping in an easier to read data structure/
+
+    // fetching data from ActiveItem table of our database in MOralis server
+    const { isWeb3Enabled } = useMoralis()
+    const {
+        data: listedNfts /**renaming "data" */,
+        isFetching: fetchingListedNfts /**renaming "data" */,
+    } = useMoralisQuery(
+        //takes two params; 1.TableName, 2.Function for the query
+        "ActiveItem",
+        (query) => query.limit(10).descending("tokenId") //if we want to do different pages we can add ".skip(page)"
+    ) // ok so we saying here that grab the data of and save it to "listedNfts", grab first 10 in descending order
+    console.log(listedNfts)
+    return (
+        <div className="container mx-auto">
+            <h1 className="py-4 px-4 text-blue-400 font-bold text-2xl">Recently Listed</h1>
+            <div className="flex flex-wrap">
+                {isWeb3Enabled ? (
+                    fetchingListedNfts ? (
+                        <div>Loading...</div>
+                    ) : (
+                        listedNfts.map((nft) => {
+                            /*".map" loops through and runs some function on all listedNFTs*/
+                            console.log(nft.attributes) // so its running an anonymous function, that takes an nft as an inpurt pararm
+                            const { price, nftAddress, tokenId, marketplaceAddress, seller } =
+                                nft.attributes // extracting 4 things from nft.attributes
+
+                            return (
+                                <NFTBox
+                                    price={price}
+                                    nftAddress={nftAddress}
+                                    tokenId={tokenId}
+                                    marketplaceAddress={marketplaceAddress}
+                                    seller={seller}
+                                    key={`${nftAddress}${tokenId}`}
+                                />
+                            )
+                        })
+                    )
+                ) : (
+                    <div>Web3 Currently Not Enabled</div>
+                )}
+            </div>
+        </div>
+    )
 }
